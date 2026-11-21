@@ -1,0 +1,281 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-dm-mono), ui-monospace, SFMono-Regular, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Brand — the original Spring of Life palette */
+  --color-paper: #f6f6f2;
+  --color-sand: #eaf0fa;
+  --color-ink: #071629;
+  --color-ink-soft: #2c3b52;
+  --color-muted: #637184;
+  --color-line: #dde3ec;
+  --color-royal: #0f3d78;
+  --color-royal-deep: #0a2c62;
+  --color-brand: #d51d43;
+  --color-brand-dark: #b0143a;
+  --color-brand-soft: #fde4ea;
+  --color-ember: #c41a3d;
+
+  /* Supporting colours — used for icons, tags and categories */
+  --color-sky: #2458f5;
+  --color-sky-soft: #e3ebff;
+  --color-rose: #ff5c7a;
+  --color-rose-soft: #ffe3e9;
+  --color-sun: #ffb020;
+  --color-sun-soft: #fff1d6;
+  --color-mint: #10a37f;
+  --color-mint-soft: #dcf5ec;
+  --color-violet: #7048e8;
+  --color-violet-soft: #ece6ff;
+
+  --animate-pulse-dot: pulse-dot 1.6s ease-in-out infinite;
+  --animate-marquee: marquee 40s linear infinite;
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(0.8); }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--color-brand);
+    color: white;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-sky);
+    outline-offset: 3px;
+  }
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@layer components {
+  .container-x {
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .container-x { padding-inline: 2rem; }
+  }
+  .display {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+  }
+  .display em {
+    font-style: normal;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .meta {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+  }
+  .field {
+    width: 100%;
+    border-radius: 3px;
+    border: 1px solid var(--color-line);
+    background: white;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    color: var(--color-ink);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-royal);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-royal) 18%, transparent);
+  }
+  .field[aria-invalid="true"] {
+    border-color: var(--color-ember);
+  }
+  .prose-church p { margin-block: 1em; line-height: 1.75; color: var(--color-ink-soft); }
+  .prose-church h3 { font-weight: 700; font-size: 1.25rem; margin-top: 1.75em; }
+  .prose-church ul { list-style: disc; padding-left: 1.25rem; color: var(--color-ink-soft); line-height: 1.75; }
+}
+
+/* ── Motion ─────────────────────────────────────────────────────────
+   Elements are visible by default. The inline script in layout.tsx adds
+   `.js` before first paint; the MotionProvider then animates them in.
+   If it never starts, the same script removes `.js` after 3s. */
+.js [data-reveal],
+.js [data-reveal-group] > *,
+.js [data-clip] {
+  opacity: 0;
+}
+.js [data-split] {
+  visibility: hidden;
+}
+.js .hero-in {
+  opacity: 0;
+}
+@keyframes scroll-cue {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
+}
+/* Word masks rendered by <Words>: each word rises from behind its own clip. */
+.sw {
+  display: inline-block;
+  overflow: clip;
+  vertical-align: top;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+.sw-i {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Liquid buttons — fill floods in from the pointer's entry point. */
+.btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.btn-fill {
+  position: absolute;
+  z-index: -1;
+  width: 0;
+  height: 0;
+  border-radius: 9999px;
+  background: var(--btn-fill, var(--color-ink));
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.btn-ring {
+  position: absolute;
+  z-index: 1;
+  border-radius: 9999px;
+  border: 1.5px solid currentColor;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Animated text links */
+.link-underline {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size 0.5s var(--ease-out-expo);
+}
+.link-underline:hover {
+  background-size: 100% 1px;
+}
+
+/* Film grain on dark surfaces — an overlay that never affects child layout. */
+.grain {
+  position: relative;
+}
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Hairline grid texture */
+.hairlines {
+  background-image: linear-gradient(to right, color-mix(in srgb, currentColor 7%, transparent) 1px, transparent 1px);
+  background-size: calc(100% / 12) 100%;
+}
+
+/* Lenis smooth scroll */
+html.lenis, html.lenis body { height: auto; }
+.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+.lenis [data-lenis-prevent] { overscroll-behavior: contain; }
+
+/* Shared-element page transitions */
+::view-transition-group(.morph) {
+  animation-duration: 650ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+::view-transition-image-pair(.morph) {
+  animation-name: via-blur;
+}
+@keyframes via-blur {
+  40% { filter: blur(4px) saturate(1.2); }
+}
+::view-transition-old(root) {
+  animation: 260ms cubic-bezier(0.4, 0, 1, 1) both vt-out;
+}
+::view-transition-new(root) {
+  animation: 420ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both vt-in;
+}
+@keyframes vt-out { to { opacity: 0; transform: translateY(-12px); } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(18px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal],
+  .js [data-reveal-group] > *,
+  .js [data-clip] { opacity: 1; }
+  .js [data-split],
+  .js [data-hero-title] { visibility: visible !important; }
+  .js .hero-in { opacity: 1; }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+@keyframes ripple {
+  0% { transform: scale(0.05); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+/* Persistent chrome stays still while pages transition underneath. */
+::view-transition-group(site-header),
+::view-transition-group(top-bar),
+::view-transition-old(top-bar),
+::view-transition-new(top-bar),
+::view-transition-old(site-header),
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+/* Hero slideshow (data-saving fallback): 4 slides × 6s, cross-fading with a slow zoom-out. */
+@keyframes hero-slide {
+  0% { opacity: 0; transform: scale(1.14); }
+  6% { opacity: 1; }
+  25% { opacity: 1; }
+  31% { opacity: 0; transform: scale(1.02); }
+  100% { opacity: 0; transform: scale(1.02); }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "rccg-spring-of-life",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "lint": "npm --prefix frontend run lint",
+    "typecheck": "npm --prefix frontend run typecheck",
+    "test:e2e": "npm --prefix frontend run test:e2e"
+  }
+}
