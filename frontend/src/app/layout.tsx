@@ -19,7 +19,11 @@ const dmSans = localFont({
 const dmMono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-dm-mono", display: "swap" });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  // Absolute URLs for link previews: explicit setting, else Vercel's production domain, else local.
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ??
+      (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000"),
+  ),
   title: { default: `${site.name} · ${site.city}`, template: `%s · ${site.name}` },
   description: site.description,
   openGraph: { type: "website", siteName: site.name, images: ["/media/v5/photo0.jpg"] },
